@@ -1,0 +1,1813 @@
+{
+  "name": "Full E-Commerce Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Product Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Action",
+              "lookupValue": "Create"
+            },
+            {
+              "lookupColumn": "Action",
+              "lookupValue": "Update"
+            },
+            {
+              "lookupColumn": "Action",
+              "lookupValue": "Delete"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        1024
+      ],
+      "id": "5535c8b3-2c89-4ee0-8716-d19fe948a5ab",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert e-commerce copywriter. \nRewrite the following product description to be SEO-friendly, engaging, and persuasive.\nInclude key features, benefits, and a call-to-action.\nKeep it under 150 words.\n\nProduct Name: {{$json[\"Product Name\"]}}\nRaw Description: {{ $json['Description(Raw) '] }}\n\n\n\n\nOutput only the rewritten description.",
+        "options": {
+          "systemMessage": "You are an expert e-commerce copywriter specializing in writing high-converting product descriptions for WooCommerce stores. Your task is to generate compelling, professional, and SEO-optimized descriptions based on raw product details.\n\nRULES:\n1. Write in an engaging, persuasive tone that drives conversions\n2. Include key features as bullet points\n3. Highlight benefits (not just features)\n4. Add a clear call-to-action at the end\n5. Keep it between 100-150 words\n6. Use SEO-friendly keywords naturally\n7. Do NOT include introductory text like \"Here is your description\" or \"Product description:\"\n8. Do NOT use markdown formatting like ** or ##\n9. Output ONLY the final description text\n\nSTRUCTURE:\n- Opening hook (1 sentence)\n- Key features (2-3 bullet points)\n- Benefits paragraph\n- Call-to-action (1 sentence)\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1296,
+        432
+      ],
+      "id": "3a610d59-aa28-4ff2-b181-cae20f4a1b39",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1264,
+        656
+      ],
+      "id": "1b7cd98d-bd1d-48fc-99c8-11ecf2f44c5b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "l2wAqg4fLjeaylax",
+          "name": "OpenAI account 431"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Action }}",
+                    "rightValue": "Create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c2c857ba-e8ae-4fa9-bfa3-a9d303242c3e"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Create"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4d9b722f-bb10-48a5-8143-1c4d99d5a751",
+                    "leftValue": "={{ $json.Action }}",
+                    "rightValue": "Update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Update"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ea9b7e2f-fa0a-4332-aefb-fd84221b0ba0",
+                    "leftValue": "={{ $json.Action }}",
+                    "rightValue": "Delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Delete"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        992
+      ],
+      "id": "3cd45fb6-5653-438d-bda6-59f8e63f3715",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "product",
+        "operation": "update",
+        "productId": "={{ $json['Product Id'] }}",
+        "updateFields": {
+          "categories": "={{ $('Get row(s) in sheet').item.json.Category }}",
+          "description": "={{ $('Update Agent').item.json.output }}",
+          "name": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}",
+          "regularPrice": "={{ String($('Get row(s) in sheet').item.json['Regular Price']) }}",
+          "shortDescription": "={{ $('Get row(s) in sheet').item.json['Description(Raw) '] }}"
+        },
+        "dimensionsUi": {},
+        "imagesUi": {},
+        "metadataUi": {}
+      },
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        1328
+      ],
+      "id": "ae924948-7dbb-43b9-8954-7250afdd05cc",
+      "name": "Update a product",
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "d88z7LpKGFs7slmN",
+          "name": "WooCommerce account 38"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "productId": "={{ $('Get row(s) in sheet').item.json['Product Id'] }}"
+      },
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        1040
+      ],
+      "id": "fdad1365-f956-4005-969d-3f2df5e001f9",
+      "name": "Delete a product",
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "d88z7LpKGFs7slmN",
+          "name": "WooCommerce account 38"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1376,
+        1440
+      ],
+      "id": "d0eb83ff-775d-4d27-ba56-f4d3411fdfdb",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "l2wAqg4fLjeaylax",
+          "name": "OpenAI account 431"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert e-commerce copywriter. \nRewrite the following product description to be SEO-friendly, engaging, and persuasive.\nInclude key features, benefits, and a call-to-action.\nKeep it under 150 words.\n\nProduct Name: {{$json[\"Product Name\"]}}\nRaw Description: {{$json[\"Description(Raw)\"]}}\n\nOutput only the rewritten description.",
+        "options": {
+          "systemMessage": "You are an expert e-commerce copywriter specializing in writing high-converting product descriptions for WooCommerce stores. Your task is to generate compelling, professional, and SEO-optimized descriptions based on raw product details.\n\nRULES:\n1. Write in an engaging, persuasive tone that drives conversions\n2. Include key features as bullet points\n3. Highlight benefits (not just features)\n4. Add a clear call-to-action at the end\n5. Keep it between 100-150 words\n6. Use SEO-friendly keywords naturally\n7. Do NOT include introductory text like \"Here is your description\" or \"Product description:\"\n8. Do NOT use markdown formatting like ** or ##\n9. Output ONLY the final description text\n\nSTRUCTURE:\n- Opening hook (1 sentence)\n- Key features (2-3 bullet points)\n- Benefits paragraph\n- Call-to-action (1 sentence)"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1296,
+        1216
+      ],
+      "id": "0a4740ac-0f02-4969-86f9-26d793c3b4a6",
+      "name": "Update Agent"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Product Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=0"
+        },
+        "startIndex": "={{ $('Get row(s) in sheet').item.json.row_number }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1072,
+        1056
+      ],
+      "id": "0d5d3d1f-7802-4a8d-820b-46ebab619ec3",
+      "name": "Delete rows or columns from sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Product Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Action",
+              "lookupValue": "Update"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1648,
+        1328
+      ],
+      "id": "5056a04a-98e6-408f-b8f0-19f230be45fb",
+      "name": "Get update row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Product Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Action": "Done",
+            "Product Name": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}",
+            "Regular Price": "={{ $('Get row(s) in sheet').item.json['Regular Price'] }}",
+            "Description(Raw) ": "={{ $('Get row(s) in sheet').item.json['Description(Raw) '] }}",
+            "Product Id": "={{ $('Get update row').item.json['Product Id'] }}",
+            "AI Description": "={{ $('Update Agent').item.json.output }}"
+          },
+          "matchingColumns": [
+            "Product Id"
+          ],
+          "schema": [
+            {
+              "id": "Action",
+              "displayName": "Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Id",
+              "displayName": "Product Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Regular Price",
+              "displayName": "Regular Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description(Raw) ",
+              "displayName": "Description(Raw) ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Description",
+              "displayName": "AI Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2096,
+        1312
+      ],
+      "id": "6cab2270-c0fd-409a-ae95-7cfa52f9c96e",
+      "name": "Update row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Get row(s) in sheet').item.json['Image URL'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-cloudinary.cloudinary",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        544
+      ],
+      "id": "ee990c71-d8bd-4af8-a192-fcfd95cc7cfb",
+      "name": "Upload an asset from URL",
+      "credentials": {
+        "cloudinaryApi": {
+          "id": "rd0FuRUA4YKqRAeP",
+          "name": "Cloudinary account 5"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        2208
+      ],
+      "id": "1ff7e798-713e-49ae-8250-548cdd75e320",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items from previous node\nconst items = $input.all();\n\n// Extract orders from each item\nlet orders = [];\nfor (const item of items) {\n  if (Array.isArray(item.json)) {\n    orders = orders.concat(item.json);\n  } else {\n    orders.push(item.json);\n  }\n}\n\n// If no orders found, return zero values\nif (orders.length === 0) {\n  const today = new Date().toLocaleDateString('en-US', { \n    weekday: 'long', \n    year: 'numeric', \n    month: 'long', \n    day: 'numeric' \n  });\n  \n  return [{\n    json: {\n      Date: today,\n      TotalOrders: 0,\n      TotalSales: \"0.00\",\n      TotalTax: \"0.00\",\n      TotalItems: 0,\n      AverageOrder: \"0.00\",\n      BestSeller: \"N/A\",\n      BestSellerQty: 0,\n      NewCustomers: 0,\n      ReturningCustomers: 0,\n      TotalRefunds: 0,\n      InvoiceLinks: \"No orders today\",\n      NoSales: true\n    }\n  }];\n}\n\n// Initialize counters\nlet totalSales = 0;\nlet totalTax = 0;\nlet totalItems = 0;\nlet orderCount = 0;\nlet totalRefunds = 0;\n\n// Best Selling Product tracking\nconst productSales = {};\n\n// New vs Returning customers\nlet newCustomers = 0;\nlet returningCustomers = 0;\n\n// Invoice links collection\nlet invoiceLinks = [];\n\n// Loop through each order\nfor (const order of orders) {\n  totalSales += parseFloat(order.total || 0);\n  totalTax += parseFloat(order.total_tax || 0);\n  orderCount++;\n\n  // Count items in each order\n  if (order.line_items && Array.isArray(order.line_items)) {\n    for (const item of order.line_items) {\n      totalItems += item.quantity || 0;\n      \n      // Track best selling product\n      const name = item.name || \"Unknown\";\n      productSales[name] = (productSales[name] || 0) + (item.quantity || 0);\n    }\n  }\n\n  // Track new vs returning customers\n  if (order.customer_id === 0 || !order.customer_id) {\n    newCustomers++;\n  } else {\n    returningCustomers++;\n  }\n\n  // Track refunds\n  if (order.status === 'refunded' || order.status === 'refund') {\n    totalRefunds += parseFloat(order.total || 0);\n  }\n\n  // Collect invoice links\n  const orderId = order.id;\n  const orderLink = `https://dev-faz-store63.pantheonsite.io/wp-admin/post.php?post=${orderId}&action=edit`;\n  invoiceLinks.push({\n    id: orderId,\n    link: orderLink,\n    total: order.total,\n    status: order.status\n  });\n}\n\n// Calculate average\nconst averageOrder = orderCount > 0 ? (totalSales / orderCount).toFixed(2) : \"0.00\";\n\n// Get best selling product\nconst bestSeller = Object.entries(productSales)\n  .sort((a, b) => b[1] - a[1])[0] || [\"N/A\", 0];\n\n// Get today's date\nconst today = new Date().toLocaleDateString('en-US', { \n  weekday: 'long', \n  year: 'numeric', \n  month: 'long', \n  day: 'numeric' \n});\n\n// Format invoice links for email\nconst invoiceLinksHtml = invoiceLinks.map(inv => \n  `Order #${inv.id} - ${inv.status} - BDT ${inv.total} - ${inv.link}`\n).join('\\n');\n\n// Return as array (required for Google Sheets)\nreturn [{\n  json: {\n    Date: today,\n    TotalOrders: orderCount,\n    TotalSales: totalSales.toFixed(2),\n    TotalTax: totalTax.toFixed(2),\n    TotalItems: totalItems,\n    AverageOrder: averageOrder,\n    BestSeller: bestSeller[0],\n    BestSellerQty: bestSeller[1],\n    NewCustomers: newCustomers,\n    ReturningCustomers: returningCustomers,\n    TotalRefunds: totalRefunds.toFixed(2),\n    InvoiceLinks: invoiceLinksHtml,\n    NoSales: false\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        2144
+      ],
+      "id": "41c24495-7fbc-4880-9732-c222f943b9f8",
+      "name": "Code in JavaScript",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "order",
+        "operation": "getAll",
+        "returnAll": true,
+        "options": {
+          "after": "2026-07-01T00:00:00"
+        }
+      },
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        624,
+        2208
+      ],
+      "id": "d4a0f9be-c3c5-460a-8b31-5d1e09f2aff4",
+      "name": "Get many orders",
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "d88z7LpKGFs7slmN",
+          "name": "WooCommerce account 38"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "Part- 1\n",
+        "height": 1408,
+        "width": 2372,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "a05649f5-bb19-4db0-8e65-fea59450ff1d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Part 2 \n",
+        "height": 480,
+        "width": 1712,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        1888
+      ],
+      "typeVersion": 1,
+      "id": "3a9306d9-8933-433d-bb70-10b28e317f20",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1274907225,
+          "mode": "list",
+          "cachedResultName": "Sales Summary",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=1274907225"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now }}",
+            "Total Orders": "={{ $json.TotalOrders }}",
+            "Total Sales": "={{ $json.TotalSales }}",
+            "Total Tax": "={{ $json.TotalTax }}",
+            "Total Items": "={{ $json.TotalItems }}",
+            "Average Order": "={{ $json.AverageOrder }}",
+            "Best Seller": "={{ $json.BestSeller }}",
+            "Best Seller Qty": "={{ $json.BestSellerQty }}",
+            "New Customers": "={{ $json.NewCustomers }}",
+            "Returning Customers": "={{ $json.ReturningCustomers }}",
+            "Total Refunds": "={{ $json.TotalRefunds }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Orders",
+              "displayName": "Total Orders",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Sales",
+              "displayName": "Total Sales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Tax",
+              "displayName": "Total Tax",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Items",
+              "displayName": "Total Items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Average Order",
+              "displayName": "Average Order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Best Seller",
+              "displayName": "Best Seller",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Best Seller Qty",
+              "displayName": "Best Seller Qty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "New Customers",
+              "displayName": "New Customers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Returning Customers",
+              "displayName": "Returning Customers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Refunds",
+              "displayName": "Total Refunds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1072,
+        2064
+      ],
+      "id": "633a987b-6344-4982-8e14-c0278e2feff2",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Daily Sales Summary for {{ $json.Date }}:\n\n📊 Total Orders: {{ $json['Total Orders'] }}\n💰 Total Sales: BDT {{ $json['Total Sales'] }}\n🧾 Total Tax: BDT {{ $json['Total Tax'] }}\n📦 Total Items Sold: {{ $json['Total Items'] }}\n📈 Average Order Value: BDT {{ $json['Average Order'] }}\n🏆 Best Selling Product:{{ $json['Best Seller'] }}  {{ $json['Best Seller Qty'] }}sold)\n👥 New Customers:  {{ $json['New Customers'] }}\nReturning Customers: {{ $json['Returning Customers'] }}\n\nInvoice Links:\n{{ $('Code in JavaScript').item.json.InvoiceLinks }}\n\nGenerate a professional HTML email report with all these metrics. Include the best selling product and customer breakdown in the insights section. Make the insights section mention which product performed best and customer behavior trends.",
+        "options": {
+          "systemMessage": "You are a professional email report designer. Your task is to generate a beautiful, modern HTML email report using ONLY inline CSS. \n\nCRITICAL RULES:\n1. Output ONLY raw HTML string - NO markdown code blocks (no ```html), NO extra text before/after HTML\n2. Use ONLY inline CSS styles (no <style> tags, no external CSS)\n3. Replace ALL placeholders with actual values from the input data\n4. Use modern gradient colors: #667eea to #764ba2 (purple), #f093fb to #f5576c (pink)\n5. Make it mobile-responsive using table-based layout\n6. Include emoji icons for visual appeal\n\nHTML STRUCTURE (replace all {{placeholders}} with actual values):\n\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Daily Sales Report</title>\n</head>\n<body style=\"margin:0;padding:0;background-color:#f4f6f9;font-family:'Segoe UI',Arial,sans-serif;\">\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f4f6f9;padding:40px 0;\">\n  <tr>\n    <td align=\"center\">\n      <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#ffffff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.12);overflow:hidden;\">\n        \n        <!-- Header -->\n        <tr>\n          <td style=\"background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px 30px;text-align:center;\">\n            <div style=\"font-size:40px;margin-bottom:10px;\">📊</div>\n            <h1 style=\"color:#ffffff;margin:0;font-size:28px;font-weight:700;letter-spacing:0.5px;\">Daily Sales Report</h1>\n            <p style=\"color:rgba(255,255,255,0.9);margin:10px 0 0;font-size:15px;\">{{date}}</p>\n          </td>\n        </tr>\n        \n        <!-- Summary Cards -->\n        <tr>\n          <td style=\"padding:30px;\">\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n              <tr>\n                <td width=\"48%\" style=\"padding-right:8px;\">\n                  <div style=\"background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:25px 15px;text-align:center;color:#fff;\">\n                    <div style=\"font-size:28px;margin-bottom:5px;\">🛒</div>\n                    <p style=\"margin:0;font-size:13px;opacity:0.9;text-transform:uppercase;letter-spacing:1px;\">Total Orders</p>\n                    <p style=\"margin:8px 0 0;font-size:28px;font-weight:800;\">{{totalOrders}}</p>\n                  </div>\n                </td>\n                <td width=\"4%\"></td>\n                <td width=\"48%\" style=\"padding-left:8px;\">\n                  <div style=\"background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);border-radius:12px;padding:25px 15px;text-align:center;color:#fff;\">\n                    <div style=\"font-size:28px;margin-bottom:5px;\">💰</div>\n                    <p style=\"margin:0;font-size:13px;opacity:0.9;text-transform:uppercase;letter-spacing:1px;\">Total Sales</p>\n                    <p style=\"margin:8px 0 0;font-size:28px;font-weight:800;\">BDT {{totalSales}}</p>\n                  </div>\n                </td>\n              </tr>\n            </table>\n          </td>\n        </tr>\n        \n        <!-- Metrics Table -->\n        <tr>\n          <td style=\"padding:0 30px 20px;\">\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:separate;border-spacing:0 8px;\">\n              <tr>\n                <td style=\"background:#f8fafc;padding:16px 20px;border-radius:10px;\">\n                  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n                    <tr>\n                      <td style=\"font-size:14px;color:#64748b;font-weight:600;\">🧾 Total Tax</td>\n                      <td style=\"font-size:16px;color:#334155;font-weight:700;text-align:right;\">BDT {{totalTax}}</td>\n                    </tr>\n                  </table>\n                </td>\n              </tr>\n              <tr>\n                <td style=\"background:#f8fafc;padding:16px 20px;border-radius:10px;\">\n                  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n                    <tr>\n                      <td style=\"font-size:14px;color:#64748b;font-weight:600;\">📦 Items Sold</td>\n                      <td style=\"font-size:16px;color:#334155;font-weight:700;text-align:right;\">{{totalItems}}</td>\n                    </tr>\n                  </table>\n                </td>\n              </tr>\n              <tr>\n                <td style=\"background:#f8fafc;padding:16px 20px;border-radius:10px;\">\n                  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n                    <tr>\n                      <td style=\"font-size:14px;color:#64748b;font-weight:600;\">📈 Average Order</td>\n                      <td style=\"font-size:16px;color:#334155;font-weight:700;text-align:right;\">BDT {{averageOrder}}</td>\n                    </tr>\n                  </table>\n                </td>\n              </tr>\n            </table>\n          </td>\n        </tr>\n        \n        <!-- Best Seller -->\n        <tr>\n          <td style=\"padding:0 30px 20px;\">\n            <div style=\"background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border-left:5px solid #22c55e;border-radius:12px;padding:18px 20px;\">\n              <p style=\"margin:0 0 8px;font-size:13px;color:#22c55e;font-weight:700;text-transform:uppercase;letter-spacing:1px;\">🏆 Best Seller</p>\n              <p style=\"margin:0;font-size:16px;color:#166534;font-weight:700;\">{{bestSeller}}</p>\n              <p style=\"margin:5px 0 0;font-size:14px;color:#15803d;\">{{bestSellerQty}} units sold today</p>\n            </div>\n          </td>\n        </tr>\n        \n        <!-- Customer Breakdown -->\n        <tr>\n          <td style=\"padding:0 30px 20px;\">\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n              <tr>\n                <td width=\"48%\" style=\"padding-right:8px;\">\n                  <div style=\"background:#eff6ff;border-radius:10px;padding:15px;text-align:center;\">\n                    <p style=\"margin:0;font-size:12px;color:#3b82f6;font-weight:600;\">👥 New Customers</p>\n                    <p style=\"margin:5px 0 0;font-size:22px;color:#1d4ed8;font-weight:700;\">{{newCustomers}}</p>\n                  </div>\n                </td>\n                <td width=\"4%\"></td>\n                <td width=\"48%\" style=\"padding-left:8px;\">\n                  <div style=\"background:#fef3c7;border-radius:10px;padding:15px;text-align:center;\">\n                    <p style=\"margin:0;font-size:12px;color:#d97706;font-weight:600;\">🔄 Returning</p>\n                    <p style=\"margin:5px 0 0;font-size:22px;color:#92400e;font-weight:700;\">{{returningCustomers}}</p>\n                  </div>\n                </td>\n              </tr>\n            </table>\n          </td>\n        </tr>\n        \n        <!-- Refunds -->\n        <tr>\n          <td style=\"padding:0 30px 20px;\">\n            <div style=\"background:#fef2f2;border-left:5px solid #ef4444;border-radius:12px;padding:18px 20px;\">\n              <p style=\"margin:0 0 8px;font-size:13px;color:#ef4444;font-weight:700;text-transform:uppercase;letter-spacing:1px;\">💸 Refunds</p>\n              <p style=\"margin:0;font-size:16px;color:#991b1b;font-weight:700;\">BDT {{totalRefunds}}</p>\n            </div>\n          </td>\n        </tr>\n        \n        <!-- Invoice Links -->\n        <tr>\n          <td style=\"padding:0 30px 30px;\">\n            <div style=\"background:#f0fdf4;border-radius:12px;padding:18px 20px;\">\n              <p style=\"margin:0 0 10px;font-size:13px;color:#22c55e;font-weight:700;text-transform:uppercase;letter-spacing:1px;\">🧾 Invoice Links</p>\n              <pre style=\"margin:0;font-size:11px;color:#166534;line-height:1.8;white-space:pre-wrap;word-break:break-all;\">{{invoiceLinks}}</pre>\n            </div>\n          </td>\n        </tr>\n        \n        <!-- Insights -->\n        <tr>\n          <td style=\"padding:0 30px 30px;\">\n            <div style=\"background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border-left:5px solid #667eea;border-radius:12px;padding:20px;\">\n              <p style=\"margin:0 0 10px;font-size:13px;color:#667eea;font-weight:700;text-transform:uppercase;letter-spacing:1px;\">💡 Insights</p>\n              <p style=\"margin:0;font-size:14px;color:#475569;line-height:1.7;\">{{insights}}</p>\n            </div>\n          </td>\n        </tr>\n        \n        <!-- Footer -->\n        <tr>\n          <td style=\"background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);padding:25px 30px;text-align:center;border-top:1px solid #e2e8f0;\">\n            <p style=\"margin:0 0 5px;font-size:13px;color:#64748b;font-weight:600;\">FazStore AI Automation</p>\n            <p style=\"margin:0;font-size:12px;color:#94a3b8;\">Generated automatically • n8n Workflow</p>\n          </td>\n        </tr>\n        \n      </table>\n    </td>\n  </tr>\n</table>\n</body>\n</html>\n\nPLACEHOLDERS TO REPLACE:\n- {{date}} → Report date\n- {{totalOrders}} → Total orders\n- {{totalSales}} → Total sales\n- {{totalTax}} → Total tax\n- {{totalItems}} → Items sold\n- {{averageOrder}} → Average order\n- {{bestSeller}} → Best selling product name\n- {{bestSellerQty}} → Best seller quantity\n- {{newCustomers}} → New customer count\n- {{returningCustomers}} → Returning customer count\n- {{totalRefunds}} → Total refunds amount\n- {{invoiceLinks}} → Formatted invoice links\n- {{insights}} → AI generated insights about sales performance\n\nWrite insights based on all data provided. Mention best seller performance, customer behavior trends, refund status, and overall sales health. Keep professional and encouraging tone.\n\nOUTPUT ONLY THE RAW HTML. NO MARKDOWN. NO EXTRA TEXT."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1296,
+        1952
+      ],
+      "id": "d0c2a2fc-011c-4096-8805-c7149351768c",
+      "name": "AI Agent1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1376,
+        2176
+      ],
+      "id": "e170f222-806f-453f-9a89-a9e6a84e4928",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "l2wAqg4fLjeaylax",
+          "name": "OpenAI account 431"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "faiyazpaidads63@gmail.com",
+        "subject": "=Daily Sales Report - {{ new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}",
+        "message": "={{ $json.output }}",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": []
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1648,
+        1920
+      ],
+      "id": "3aaa41a6-3a01-47fc-a388-ae0772c578fa",
+      "name": "Send a message",
+      "webhookId": "3125d2db-0a2e-4371-9950-3b5b7fa99478",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "K9iawGKSvj3OQBUu",
+          "name": "Gmail Api"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1517339796,
+          "mode": "list",
+          "cachedResultName": "Error Log Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=1517339796"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ new Date().toISOString() }}",
+            "Workflow": "Assignment 4 (Workflow 1)",
+            "Node Name": "Get many orders",
+            "Error Message": "={{ $json.message }}",
+            "Status": "Failed"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Node Name",
+              "displayName": "Node Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1856,
+        2176
+      ],
+      "id": "ae2d83c3-abaf-498d-ac69-616993f922c6",
+      "name": "Add Error Message",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        400,
+        1024
+      ],
+      "id": "ead53540-5f9d-46d6-ab24-b7540f7337d6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "product",
+        "operation": "create",
+        "name": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}",
+        "additionalFields": {
+          "categories": "={{ (() => {\n  const row = $('Get row(s) in sheet').item.json;\n  const rawId = row['Category_ID'] || row['Category ID'] || row['category_id'] || row['Category'];\n  return rawId && !isNaN(rawId) ? [ parseInt(rawId, 10) ] : [];\n})() }}",
+          "description": "={{ $('AI Agent').item.json.output }}",
+          "regularPrice": "={{ $('Get row(s) in sheet').item.json['Regular Price'].toString() }}",
+          "shortDescription": "={{ $('Get row(s) in sheet').item.json['Description(Raw) '] }}",
+          "status": "publish",
+          "type": "simple"
+        },
+        "dimensionsUi": {},
+        "imagesUi": {
+          "imagesValues": [
+            {
+              "alt": "",
+              "src": "={{ $('Upload an asset from URL').item.json.secure_url }}",
+              "name": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}"
+            }
+          ]
+        },
+        "metadataUi": {}
+      },
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        448
+      ],
+      "id": "9378b041-9fd5-49b3-b08d-77fbd8aafe02",
+      "name": "Create a product with image",
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "d88z7LpKGFs7slmN",
+          "name": "WooCommerce account 38"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Product Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Action": "Done",
+            "Product Name": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}",
+            "Product Id": "={{ $json.id }}",
+            "Regular Price": "={{ $('Get row(s) in sheet').item.json['Regular Price'] }}",
+            "Description(Raw) ": "={{ $('Get row(s) in sheet').item.json['Description(Raw) '] }}",
+            "AI Description": "={{ $('AI Agent').item.json.output }}",
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Action",
+              "displayName": "Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Id",
+              "displayName": "Product Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Regular Price",
+              "displayName": "Regular Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description(Raw) ",
+              "displayName": "Description(Raw) ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Description",
+              "displayName": "AI Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2464,
+        544
+      ],
+      "id": "c7dc17c4-999c-4eec-8922-fa069a54a526",
+      "name": "Create Product",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "adb2b59d-2f36-4011-818e-a840bc1c2a56",
+              "leftValue": "={{ $json['Product Name'] }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "9ae5988d-33b3-4c18-99b7-f015e99172a9",
+              "leftValue": "={{ $json['Regular Price'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ddcad326-622f-4137-80b1-f7a83b85e8bd",
+              "leftValue": "={{ $json['Description(Raw) '] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "9f2a965b-15c9-4e02-9c63-efb229e4e0ae",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json['Category ID'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1072,
+        688
+      ],
+      "id": "0bdb7048-17e0-42f8-9bcf-2a1f36241ada",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1517339796,
+          "mode": "list",
+          "cachedResultName": "Error Log Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=1517339796"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now }}",
+            "Workflow": "Workflow 1",
+            "Node Name": "Get rows in sheet",
+            "Error Message": "={{ !$json['Product Name'] ? 'Product Name is missing!' : 'Regular Price is missing!' }}",
+            "Status": "Failed"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Node Name",
+              "displayName": "Node Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1360,
+        832
+      ],
+      "id": "76210fb7-ac8a-4c7a-83d6-e05a95bbb978",
+      "name": "Error Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a3abfe81-ece6-4c7f-aa0c-16c5c0cc3419",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "c8e8670f-e61b-493d-ab7b-86deb9363688",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json['Regular Price'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d80ce6ea-322f-46d1-8f83-7572cda09605",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json['Description(Raw) '] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "07662539-c2cf-4b05-8970-7e5241efab8c",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json['Category ID'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1072,
+        1472
+      ],
+      "id": "505c8647-cbc7-4cea-88b1-00f7339b2e45",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog",
+          "mode": "list",
+          "cachedResultName": "WooCommerce Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1517339796,
+          "mode": "list",
+          "cachedResultName": "Error Log Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kg0KpQNOZr7h7mkVMHikB0GNihhspar92rTNniJivog/edit#gid=1517339796"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now }}",
+            "Workflow": "Workflow 1",
+            "Node Name": "Get rows in sheet",
+            "Error Message": "={{ !$json['Product Name'] ? 'Product Name is missing!' : 'Regular Price is missing!' }}{{ $json.error.message }}",
+            "Status": "Failed"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Node Name",
+              "displayName": "Node Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1360,
+        1616
+      ],
+      "id": "c271a22f-4c2f-426e-bbd6-8251016397e4",
+      "name": "Error Log ",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IxgGXMbCpcpPie1u",
+          "name": "Google Sheets account 778"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "product",
+        "operation": "create",
+        "name": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}",
+        "additionalFields": {
+          "categories": "={{ (() => {\n  const row = $('Get row(s) in sheet').item.json;\n  const rawId = row['Category_ID'] || row['Category ID'] || row['category_id'] || row['Category'];\n  return rawId && !isNaN(rawId) ? [ parseInt(rawId, 10) ] : [];\n})() }}",
+          "description": "={{ $('AI Agent').item.json.output }}",
+          "regularPrice": "={{ $('Get row(s) in sheet').item.json['Regular Price'].toString() }}",
+          "shortDescription": "={{ $('Get row(s) in sheet').item.json['Description(Raw) '] }}",
+          "status": "publish",
+          "type": "simple"
+        },
+        "dimensionsUi": {},
+        "imagesUi": {
+          "imagesValues": [
+            {
+              "alt": "",
+              "src": "={{ $json.url }}",
+              "name": "={{ $('Get row(s) in sheet').item.json['Product Name'] }}"
+            }
+          ]
+        },
+        "metadataUi": {}
+      },
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        2128,
+        832
+      ],
+      "id": "8743d31e-36de-4e42-a264-2e40f5c572ed",
+      "name": "Create a product with ai generated image",
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "d88z7LpKGFs7slmN",
+          "name": "WooCommerce account 38"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ \"https://image.pollinations.ai/prompt/\" + encodeURIComponent($('Get row(s) in sheet').item.json['Product Name'] + \" professional studio product photograph, isolated on a clean solid white background\") }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-cloudinary.cloudinary",
+      "typeVersion": 1,
+      "position": [
+        1824,
+        832
+      ],
+      "id": "22a41135-121e-4692-bc86-1cee2766de5e",
+      "name": "Upload an asset from URL1",
+      "credentials": {
+        "cloudinaryApi": {
+          "id": "rd0FuRUA4YKqRAeP",
+          "name": "Cloudinary account 5"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Upload an asset from URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete rows or columns from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a product": {
+      "main": [
+        [
+          {
+            "node": "Update row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Update Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Agent": {
+      "main": [
+        [
+          {
+            "node": "Get update row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get update row": {
+      "main": [
+        [
+          {
+            "node": "Update a product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete rows or columns from sheet": {
+      "main": [
+        [
+          {
+            "node": "Delete a product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload an asset from URL": {
+      "main": [
+        [
+          {
+            "node": "Create a product with image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload an asset from URL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many orders": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Add Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a product with image": {
+      "main": [
+        [
+          {
+            "node": "Create Product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Update Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Log ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a product with ai generated image": {
+      "main": [
+        [
+          {
+            "node": "Create Product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload an asset from URL1": {
+      "main": [
+        [
+          {
+            "node": "Create a product with ai generated image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "74133a8f-0463-4702-97de-649523527d9c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f00bba974abf03cb5183d4d65f8a9645a781b04770df6a7d08284fca87d50b3"
+  },
+  "nodeGroups": [],
+  "id": "kvuaKiBinHO6sa9f",
+  "tags": []
+}
