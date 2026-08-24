@@ -21,6 +21,5 @@ Are you looking to save hundreds of manual working hours and streamline your bus
 
 * **Youtube :** https://www.youtube.com/@FaiyazRahman-63
 * **Instagram:** https://www.instagram.com/faz63.ai/ 
-* **Discord** 
 * **Hire me on Fiverr:** https://www.fiverr.com/s/p3pAANl
 * **Send a Direct Message:** Feel free to reach out to discuss your custom automation project!
