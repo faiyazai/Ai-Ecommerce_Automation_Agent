@@ -19,5 +19,8 @@ Welcome to the repository for my **AI-powered E-Commerce Automation System**. Th
 ## 💼 Let's Work Together!
 Are you looking to save hundreds of manual working hours and streamline your business operations? I specialize in building custom AI agents and powerful automation workflows tailored to your specific needs. 
 
+* **Youtube :** https://www.youtube.com/@FaiyazRahman-63
+* **Instagram:** https://www.instagram.com/faz63.ai/ 
+* **Discord** 
 * **Hire me on Fiverr:** https://www.fiverr.com/s/p3pAANl
 * **Send a Direct Message:** Feel free to reach out to discuss your custom automation project!
