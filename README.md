@@ -12,14 +12,18 @@ Welcome to the repository for my **AI-powered E-Commerce Automation System**. Th
 * **Automated Daily Analytics & Invoices:** At the end of every 24 hours, the system generates a comprehensive daily sales report and emails it to the admin. It tracks total revenue, best-selling items, new customers, and provides links to auto-generated invoices.
 * **Chatbot Integration:** The entire workflow can be triggered and managed via simple text commands on WhatsApp or Telegram.
 
-## 📁 Repository Contents
-* **`Full E-Commerce Automation.json`**: The core automation workflow and blueprint file.
-* **Project Documentation (PDF)**: Detailed documentation outlining the system architecture and workflow logic.
+## 📸 Workflow
+
+![Workflow screenshot](ecommerce-automation.png)
+
+Built and run in n8n. This repo holds the writeup and a screenshot of the live canvas; the workflow JSON itself is kept private.
+
+Part of a portfolio of n8n automation builds: https://faiyaz-rahman.vercel.app
 
 ## 💼 Let's Work Together!
-Are you looking to save hundreds of manual working hours and streamline your business operations? I specialize in building custom AI agents and powerful automation workflows tailored to your specific needs. 
+Are you looking to save hundreds of manual working hours and streamline your business operations? I specialize in building custom AI agents and powerful automation workflows tailored to your specific needs.
 
 * **Youtube :** https://www.youtube.com/@FaiyazRahman-63
-* **Instagram:** https://www.instagram.com/faz63.ai/ 
+* **Instagram:** https://www.instagram.com/faz63.ai/
 * **Hire me on Fiverr:** https://www.fiverr.com/s/p3pAANl
 * **Send a Direct Message:** Feel free to reach out to discuss your custom automation project!
